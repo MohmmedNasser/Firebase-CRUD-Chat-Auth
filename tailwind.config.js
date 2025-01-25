@@ -15,6 +15,9 @@ module.exports = {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      roboto: ['Roboto', 'ui-sans-serif', 'system-ui']
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",

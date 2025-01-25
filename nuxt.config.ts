@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
+  ssr: false,
   typescript: {
     typeCheck: true
   },
@@ -10,7 +11,13 @@ export default defineNuxtConfig({
     classPrefix: '',
     classSuffix: '',
   },
-  modules: ['shadcn-nuxt', '@nuxtjs/tailwindcss', '@nuxtjs/color-mode', '@nuxt/icon'],
+  modules: [
+    'shadcn-nuxt',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/color-mode',
+    '@nuxt/icon',
+    '@nuxt/fonts',
+  ],
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -22,5 +29,4 @@ export default defineNuxtConfig({
      */
     componentDir: './components/ui'
   },
-  ssr: false,
 })

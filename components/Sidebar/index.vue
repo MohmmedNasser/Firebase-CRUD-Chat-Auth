@@ -7,23 +7,32 @@
                 <SidebarItem :sidebarMenu="bottomMenu" />
             </div>
         </div>
+        <button v-if="isMobile" @click="isSidebarOpen = false"
+            class="fixed top-[20px] start-[300px] w-8 h-8 flex justify-center items-center bg-background rounded-full">
+            <Icon name="material-symbols:close-rounded" size="20" />
+        </button>
     </aside>
 </template>
 
 <script setup lang="ts">
 
+const { isSidebarOpen, isMobile } = useSidebar();
+
 const bottomMenu = [
     {
         title: "Settings",
         icon: "heroicons:cog-8-tooth",
+        path: '/settings'
     },
     {
         title: "Help",
         icon: "heroicons:question-mark-circle",
+        path: '/help'
     },
     {
         title: "Logout",
         icon: "heroicons:arrow-left-on-rectangle",
+        path: '/logout'
     },
 ]
 
@@ -31,29 +40,32 @@ const sidebarMenu = [
     {
         title: "Dashboard",
         icon: "heroicons:home",
+        path: '/'
     },
     {
-        title: "Customers",
-        icon: "heroicons:user-group",
+        title: "Tabs",
+        icon: "material-symbols:tabs-outline-rounded",
+        path: '/tabs'
     },
     {
-        title: "Orders",
-        icon: "heroicons:shopping-cart",
+        title: "Dialog",
+        icon: "proicons:archive",
+        path: '/dialog'
     },
     {
         title: "Products",
         icon: "heroicons:cube",
         subItems: [
-            { title: "Details" },
-            { title: "Create" },
-            { title: "Edit" },
-            { title: "Update" },
+            { title: "Details", path: '/details' },
+            { title: "Create", path: '/create' },
+            { title: "Edit", path: '/edit' },
+            { title: "Update", path: '/update' },
         ],
     },
     {
         title: "Analytics",
         icon: "heroicons:chart-pie",
-        subItems: [{ title: "Overview" }, { title: "Statistics" }, { title: "Trends" }],
+        subItems: [{ title: "Overview", path: '/overview' }, { title: "Statistics", path: '/statistics' }, { title: "Trends", path: '/trends' }],
     },
 ]
 

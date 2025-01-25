@@ -3,7 +3,7 @@
         <div class="container">
             <div class="flex justify-between items-center gap-2">
                 <div class="flex justify-between items-center gap-2">
-                    <button class="flex justify-center items-center w-6 h-6 bg-transparent cursor-pointer lg:hidden">
+                    <button @click="isSidebarOpen = true" class="flex justify-center items-center w-6 h-6 bg-transparent cursor-pointer lg:hidden">
                         <span class="sr-only">Button used to open menu</span>
                         <Icon name="mage:align-left" size="50" />
                     </button>
@@ -76,6 +76,8 @@
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 const colorMode = useColorMode();
+
+const { isSidebarOpen } = useSidebar();
 
 const logout = () => {
     alert('Logout User');
