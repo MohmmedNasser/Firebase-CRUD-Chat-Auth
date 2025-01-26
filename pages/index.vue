@@ -1,5 +1,5 @@
 <template>
-    <GlobalHeading headingTitle="Dashboard" />
+    <GlobalLayoutHeading headingTitle="Dashboard" />
     <StatusCard />
     <ChartSales />
 </template>

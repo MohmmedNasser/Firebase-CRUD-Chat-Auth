@@ -89,5 +89,6 @@ module.exports = {
   plugins: [
     animate,
     scrollbar,
+    require('@tailwindcss/forms'),
   ],
 }

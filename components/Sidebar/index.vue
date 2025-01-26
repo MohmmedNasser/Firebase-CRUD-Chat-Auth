@@ -65,7 +65,7 @@ const sidebarMenu = [
     {
         title: "Analytics",
         icon: "heroicons:chart-pie",
-        subItems: [{ title: "Overview", path: '/overview' }, { title: "Statistics", path: '/statistics' }, { title: "Trends", path: '/trends' }],
+        subItems: [{ title: "Payments", path: '/payments' }],
     },
 ]
 

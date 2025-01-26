@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { GlobalHeading } from '#components';
 
 </script>
 
 <template>
-  <GlobalHeading headingTitle="Tabs" />
+  <GlobalLayoutHeading headingTitle="Tabs" />
   <Tabs default-value="account" class="w-[600px]">
     <TabsList class="grid w-full grid-cols-2">
       <TabsTrigger value="account">
