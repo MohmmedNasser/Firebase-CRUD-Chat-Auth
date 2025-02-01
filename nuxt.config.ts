@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  ssr: false,
+  // ssr: false,
   typescript: {
     typeCheck: true
   },
@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@nuxt/icon',
     '@nuxt/fonts',
+    'nuxt-vuefire',
   ],
   shadcn: {
     /**
@@ -28,5 +29,17 @@ export default defineNuxtConfig({
      * @default "./components/ui"
      */
     componentDir: './components/ui'
+  },
+  vuefire: {
+    auth: {
+      enabled: true,
+      sessionCookie: true
+    },
+    config: {
+      apiKey: process.env.NUXT_API_KEY,
+      authDomain: process.env.NUXT_AUTH_DOMAIN,
+      projectId: process.env.NUXT_PROJECT_ID,
+      appId: process.env.NUXT_APP_ID,
+    },
   },
 })
