@@ -8,7 +8,7 @@
                     Start managing your pets today!
                 </p>
             </div>
-            <div class="bg-white max-w-[500px] mx-auto mt-8 p-6 rounded-lg">
+            <div class="bg-white dark:bg-gray-900 max-w-[500px] mx-auto mt-8 p-6 rounded-lg">
                 <form class="mt-5" @submit.prevent="onSubmit">
 
                     <FormField v-slot="{ componentField }" name="name">

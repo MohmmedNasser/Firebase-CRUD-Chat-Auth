@@ -3,7 +3,8 @@
         <div class="container">
             <div class="flex justify-between items-center gap-2">
                 <div class="flex justify-between items-center gap-2">
-                    <button @click="isSidebarOpen = true" class="flex justify-center items-center w-6 h-6 bg-transparent cursor-pointer lg:hidden">
+                    <button @click="isSidebarOpen = true"
+                        class="flex justify-center items-center w-6 h-6 bg-transparent cursor-pointer lg:hidden">
                         <span class="sr-only">Button used to open menu</span>
                         <Icon name="mage:align-left" size="50" />
                     </button>
@@ -43,21 +44,22 @@
                                     class="h-full w-full" />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" class="w-[175px]">
+                        <DropdownMenuContent align="end" class="w-[220px]">
                             <DropdownMenuLabel class="border-b px-3 py-1.5 text-sm mb-1">
-                                <p class="font-semibold">Hello John</p>
-                                <a href="mailto:johndoe@test.com"
-                                    class="font-normal text-sm text-gray-400">johndoe@test.com</a>
+                                <p class="font-semibold">{{ user?.displayName }}</p>
+                                <a :href="`mailto:${user?.email}`"
+                                    class="font-normal text-sm text-gray-400 break-words">{{
+                                        user?.email }}</a>
                             </DropdownMenuLabel>
                             <template v-for="(item, index) in profileMenuOptions" :key="index">
                                 <DropdownMenuItem class="p-0" v-if="!item.divider">
                                     <RouterLink to="/" v-if="!item.click"
-                                        class="block w-full rounded-md p-2 hover:bg-gray-100 focus-within:bg-gray-100">
+                                        class="block w-full rounded-md p-2 transition-all hover:bg-gray-100 focus-within:bg-gray-100 dark:hover:bg-gray-900">
                                         {{ item.title }}
                                     </RouterLink>
 
                                     <button v-else @click="item.click"
-                                        class="block w-full text-start rounded-md p-2 hover:bg-gray-100 focus-within:bg-gray-100">
+                                        class="block w-full text-start rounded-md p-2 transition-all hover:bg-gray-100 focus-within:bg-gray-100 dark:hover:bg-gray-900">
                                         {{ item.title }}
                                     </button>
 
@@ -75,12 +77,18 @@
 <script setup lang="ts">
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { signOut } from 'firebase/auth';
 const colorMode = useColorMode();
 
 const { isSidebarOpen } = useSidebar();
+const auth = useFirebaseAuth();
 
-const logout = () => {
-    alert('Logout User');
+const user = useCurrentUser();
+
+const logout = async () => {
+    await signOut(auth!);
+    await navigateTo('/auth/login', { replace: true });
+    // alert('Logout User');
 }
 
 const profileMenuOptions = [

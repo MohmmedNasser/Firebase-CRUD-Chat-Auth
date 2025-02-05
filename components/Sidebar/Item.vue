@@ -1,14 +1,26 @@
 <template>
     <div>
         <template v-for="(item, index) in sidebarMenu" :key="index">
-            <RouterLink :to="item.path ? item.path : ''" v-if="!item.subItems"
-                class="flex items-center gap-2 text-left text-[14px] p-3 transition hover:bg-gray-50 dark:hover:bg-gray-800 focus:bg-gray-100 dark:focus:bg-gray-800"
-                :class="{ 'bg-gray-200 dark:bg-gray-800 hover:!bg-gray-200 dark:hover:!bg-gray-800': $route.fullPath == item.path }">
-                <Icon v-if="item.icon" :name="item.icon" class="h-5 w-5 text-muted-foreground" />
-                <span>
-                    {{ item.title }}
-                </span>
-            </RouterLink>
+
+            <template v-if="!item.subItems">
+                <RouterLink :to="item.path ? item.path : ''" v-if="!item.click"
+                    class="flex items-center gap-2 text-left text-[14px] p-3 transition hover:bg-gray-50 dark:hover:bg-gray-800 focus:bg-gray-100 dark:focus:bg-gray-800"
+                    :class="{ 'bg-gray-200 dark:bg-gray-800 hover:!bg-gray-200 dark:hover:!bg-gray-800': $route.fullPath == item.path }">
+                    <Icon v-if="item.icon" :name="item.icon" class="h-5 w-5 text-muted-foreground" />
+                    <span>
+                        {{ item.title }}
+                    </span>
+                </RouterLink>
+                <button v-else @click="item.click"
+                    class="flex items-center gap-2 text-left text-[14px] p-3 transition hover:bg-gray-50 dark:hover:bg-gray-800 focus:bg-gray-100 dark:focus:bg-gray-800 w-full">
+                    <Icon v-if="item.icon" :name="item.icon" class="h-5 w-5 text-muted-foreground" />
+                    <span>
+                        {{ item.title }}
+                    </span>
+                </button>
+            </template>
+
+
             <Accordion v-else type="single" collapsible>
                 <AccordionItem value="item-1" class="border-b-0">
                     <AccordionTrigger
@@ -39,20 +51,9 @@
 </template>
 
 <script setup lang="ts">
+import type { MenuItem, SubItem } from '~/types';
 
 const route = useRoute();
-
-interface SubItem {
-    title: string;
-    path: string;
-}
-
-interface MenuItem {
-    title: string;
-    icon: string;
-    path?: string;
-    subItems?: SubItem[];
-}
 
 defineProps<{
     sidebarMenu: MenuItem[],

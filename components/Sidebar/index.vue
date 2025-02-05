@@ -15,24 +15,32 @@
 </template>
 
 <script setup lang="ts">
+import { signOut } from 'firebase/auth';
 
 const { isSidebarOpen, isMobile } = useSidebar();
+const auth = useFirebaseAuth();
+
+const logout = async () => {
+    await signOut(auth!);
+    await navigateTo('/auth/login', { replace: true });
+}
 
 const bottomMenu = [
     {
         title: "Settings",
         icon: "heroicons:cog-8-tooth",
-        path: '/'
+        path: '/settings'
     },
     {
         title: "Help",
         icon: "heroicons:question-mark-circle",
-        path: '/'
+        path: '/help'
     },
     {
         title: "Logout",
         icon: "heroicons:arrow-left-on-rectangle",
-        path: '/'
+        path: '/logout',
+        click: () => logout(),
     },
 ]
 
@@ -56,10 +64,9 @@ const sidebarMenu = [
         title: "Products",
         icon: "heroicons:cube",
         subItems: [
-            { title: "Details", path: '/details' },
-            { title: "Create", path: '/create' },
-            { title: "Edit", path: '/edit' },
-            { title: "Update", path: '/update' },
+            { title: "Show", path: '/products' },
+            { title: "Create", path: '/products/create' },
+            { title: "Update", path: '/products/update' },
         ],
     },
     {

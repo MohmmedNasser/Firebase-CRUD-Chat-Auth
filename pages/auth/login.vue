@@ -8,7 +8,7 @@
                     Welcome back! Enter your details to get started.
                 </p>
             </div>
-            <div class="bg-white max-w-[500px] mx-auto mt-8 p-6 rounded-lg">
+            <div class="bg-white dark:bg-gray-900 max-w-[500px] mx-auto mt-8 p-6 rounded-lg">
                 <form class="mt-5" @submit.prevent="onSubmit">
 
                     <FormField v-slot="{ componentField }" name="email">
@@ -31,7 +31,7 @@
                         </FormItem>
                     </FormField>
 
-                    <p class="text-sm text-end mt-2">
+                    <p class="text-sm text-end mt-3">
                         <NuxtLink to="/auth/forgot-password" class="text-primary-500 hover:underline">
                             Forgot password?
                         </NuxtLink>
