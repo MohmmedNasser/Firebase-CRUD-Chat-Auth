@@ -29,17 +29,17 @@ const bottomMenu = [
     {
         title: "Settings",
         icon: "heroicons:cog-8-tooth",
-        path: '/settings'
+        path: '/'
     },
     {
         title: "Help",
         icon: "heroicons:question-mark-circle",
-        path: '/help'
+        path: '/'
     },
     {
         title: "Logout",
         icon: "heroicons:arrow-left-on-rectangle",
-        path: '/logout',
+        path: '/',
         click: () => logout(),
     },
 ]
@@ -66,7 +66,7 @@ const sidebarMenu = [
         subItems: [
             { title: "Show", path: '/products' },
             { title: "Create", path: '/products/create' },
-            { title: "Update", path: '/products/update' },
+            { title: "Update", path: '/products/create' },
         ],
     },
     {

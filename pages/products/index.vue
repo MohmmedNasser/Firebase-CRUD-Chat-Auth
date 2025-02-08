@@ -5,9 +5,10 @@
         <p>
             Welcome back, <span class="font-semibold">{{ user?.displayName }}</span>
         </p>
-        <Button>
+        <Button @click="dialog = true">
             Add Product
         </Button>
+        <LazyProductModal v-if="dialog" v-model="dialog" :product="editItem" />
     </div>
 </template>
 
@@ -19,9 +20,13 @@ const user = useCurrentUser();
 const db = useFirestore();
 const collectionName = 'products';
 
-const q = query(collection(db, collectionName), where('userId', '==', user.value?.uid));
+// const isOpen = useState('dialogOpen', () => false);
+const dialog = ref(false);
+const editItem = ref<Products>();
 
-const { data: products, pending } = useCollection<Products>(q)
+// const q = query(collection(db, collectionName), where('userId', '==', user.value?.uid));
+
+// const { data: products, pending } = useCollection<Products>(q, { ssrKey: useId() });
 
 useSeoMeta({
     title: "Products",
