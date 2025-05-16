@@ -9,24 +9,19 @@
             Add Product
         </Button>
         <LazyProductModal v-if="dialog" v-model="dialog" :product="editItem" />
+
     </div>
+    <ProductCard v-model:dialog="dialog" v-model:editItem="editItem" />
 </template>
 
 <script setup lang="ts">
-import { query, collection, where } from 'firebase/firestore';
 import type { Products } from '~/types';
 
 const user = useCurrentUser();
-const db = useFirestore();
-const collectionName = 'products';
 
-// const isOpen = useState('dialogOpen', () => false);
 const dialog = ref(false);
 const editItem = ref<Products>();
 
-// const q = query(collection(db, collectionName), where('userId', '==', user.value?.uid));
-
-// const { data: products, pending } = useCollection<Products>(q, { ssrKey: useId() });
 
 useSeoMeta({
     title: "Products",

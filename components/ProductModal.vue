@@ -2,149 +2,127 @@
     <Dialog v-model:open="open">
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Add product</DialogTitle>
+                <DialogTitle>{{ title }}</DialogTitle>
             </DialogHeader>
 
-            <form class="mt-5" @submit.prevent="submit">
-                <div>
-                    <label class="block font-medium">Name</label>
-                    <input v-model="form.name" type="text" placeholder="Product name"
-                        class="w-full border p-2 mt-2 rounded-md" />
-                    <p v-if="errors.name" class="text-red-500 text-sm">{{ errors.name }}</p>
+            <form @submit="onSubmit" class="space-y-4">
+                <div class="space-y-2">
+                    <Label for="name">Name</Label>
+                    <Input id="name" v-model="name" v-bind="nameAttrs" placeholder="John Doe" />
+                    <span v-if="errors.name" class="text-sm inline-block mt-2 text-red-500">
+                        {{ errors.name }}
+                    </span>
                 </div>
 
-                <!-- Description Field -->
-                <div class="mt-3">
-                    <label class="block font-medium">Description</label>
-                    <textarea v-model="form.description" placeholder="Type your product description here."
+                <div class="space-y-2">
+                    <Label for="description">Description</Label>
+                    <textarea v-model="description" v-bind="descriptionAttrs"
+                        placeholder="Type your product description here."
                         class="w-full border p-2 mt-2 rounded-md resize-none"></textarea>
-                    <p v-if="errors.description" class="text-red-500 text-sm">{{ errors.description }}</p>
+                    <span v-if="errors.description" class="text-sm text-red-500">
+                        {{ errors.description }}
+                    </span>
                 </div>
 
-                <!-- Price Field -->
-                <div class="mt-3">
-                    <label class="block font-medium">Price</label>
-                    <input v-model="form.price" type="number" placeholder="Product price"
-                        class="w-full border p-2 mt-2 rounded-md" />
-                    <p v-if="errors.price" class="text-red-500 text-sm">{{ errors.price }}</p>
+                <div class="space-y-2">
+                    <Label for="price">Price</Label>
+                    <Input type="number" id="price" v-model="price" v-bind="priceAttrs" placeholder="Price" />
+                    <span v-if="errors.price" class="text-sm inline-block mt-2 text-red-500">
+                        {{ errors.price }}
+                    </span>
                 </div>
 
-                <Button type="submit" class="w-full mt-5 h-11">
-                    Create
-                </Button>
-
+                <div class="flex justify-end gap-2">
+                    <Button type="submit" :disabled="isSubmitting">{{ buttonText }}</Button>
+                </div>
             </form>
+
+
         </DialogContent>
     </Dialog>
 
 </template>
 
 <script setup lang="ts">
-import * as z from 'zod'
+
+import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
-import { useForm } from 'vee-validate';
+import * as z from 'zod'
 import type { Products } from '~/types';
 import { useToast } from './ui/toast';
+import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 
 const { toast } = useToast();
 const db = useFirestore();
 const collectionName = 'products';
 const user = useCurrentUser();
 
+const props = defineProps<{
+    product?: Products;
+}>();
+
 const open = defineModel({
     type: Boolean,
     default: false,
 });
 
-const props = defineProps<{
-    product?: Products;
-}>();
+// Validation schema
+const formSchema = toTypedSchema(z.object({
+    name: z.string().min(2, "Name must be at least 2 characters").max(50),
+    description: z.string().min(10, "Description must be at least 10 characters").max(250),
+    price: z.number({
+        invalid_type_error: "Price must be a number",
+        required_error: "Price is required",
+    }).min(0.01, "Price must be at least 0.01"),
+}))
+
+const { handleSubmit, errors, defineField, isSubmitting, setValues, resetForm } = useForm({
+    validationSchema: formSchema,
+    initialValues: props.product || {},
+});
 
 const isEditing = computed(() => !!props.product);
 
-const form = ref({
-    name: props.product?.name || '',
-    description: props.product?.description || '',
-    price: props.product?.price || 0
-});
+const [name, nameAttrs] = defineField('name')
+const [description, descriptionAttrs] = defineField('description')
+const [price, priceAttrs] = defineField('price')
 
-const errors = ref({
-    name: '',
-    description: '',
-    price: ''
-});
+const title = computed(() => isEditing.value ? 'Edit Product' : 'Add Product');
+const buttonText = computed(() => isEditing.value ? 'Update Product' : 'Add Product');
 
-const submit = async () => {
-    errors.value = { name: '', description: '', price: '' };
-
-    if (!form.value.name) errors.value.name = "Name is required";
-    if (!form.value.description) errors.value.description = "Description is required";
-    if (!form.value.price || form.value.price <= 0) errors.value.price = "Price must be greater than 0";
-
-    if (errors.value.name || errors.value.description || errors.value.price) {
-        return;
-    }
+const onSubmit = handleSubmit(async (values) => {
+    console.log(values);
     try {
-        const productRef = doc(collection(db, collectionName));
-        await setDoc(productRef, {
-            ...form.value,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            userId: user.value?.uid,
-        });
-        toast({
-            title: `Product Added successfully`
-        });
+        if (isEditing.value) {
+            // Update product
+            const productRef = doc(db, collectionName, props.product?.id!);
+            await updateDoc(productRef, {
+                name: values.name,
+                description: values.description,
+                price: values.price,
+                updatedAt: new Date().toISOString(),
+            });
+            toast({
+                title: `Product updated successfully`
+            });
+        } else {
+            // Create product
+            const productRef = doc(collection(db, collectionName));
+            await setDoc(productRef, {
+                ...values,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                userId: user.value?.uid,
+            });
+            toast({
+                title: `Product Added successfully`
+            });
+        }
         open.value = false;
     } catch (error) {
         console.error('❌ Error in handleProductSubmit:', error);
     }
-}
-
-
-// const { handleSubmit } = useForm({
-//     validationSchema: toTypedSchema(ProductSchema),
-//     // initialValues: props.pet ?? {},
-// });
-
-
-// const submit = handleSubmit((values) => {
-//     console.log('test');
-//     console.log(ProductSchema.parse({ name: 'Test', description: 'A valid description', price: 10 }));
-
-// try {
-//     if (isEditing.value) {
-//         // Update product
-//         const productRef = doc(db, collectionName, props.product?.id!);
-//         await updateDoc(productRef, {
-//             name: values.name,
-//             description: values.description,
-//             price: values.price,
-//             updatedAt: new Date().toISOString(),
-//         });
-//         toast({
-//             title: `Product updated successfully`
-//         });
-//     } else {
-//         // Create product
-//         const productRef = doc(collection(db, collectionName));
-//         await setDoc(productRef, {
-//             ...values,
-//             createdAt: new Date().toISOString(),
-//             updatedAt: new Date().toISOString(),
-//             userId: user.value?.uid,
-//         });
-//         toast({
-//             title: `Product Added successfully`
-//         });
-//     }
-//     open.value = false;
-// } catch (error) {
-//     console.error('❌ Error in handleProductSubmit:', error);
-// }
-
-// });
+})
 
 </script>
 

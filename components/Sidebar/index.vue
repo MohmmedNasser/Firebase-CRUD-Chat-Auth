@@ -26,16 +26,16 @@ const logout = async () => {
 }
 
 const bottomMenu = [
-    {
-        title: "Settings",
-        icon: "heroicons:cog-8-tooth",
-        path: '/'
-    },
-    {
-        title: "Help",
-        icon: "heroicons:question-mark-circle",
-        path: '/'
-    },
+    // {
+    //     title: "Settings",
+    //     icon: "heroicons:cog-8-tooth",
+    //     path: '/'
+    // },
+    // {
+    //     title: "Help",
+    //     icon: "heroicons:question-mark-circle",
+    //     path: '/'
+    // },
     {
         title: "Logout",
         icon: "heroicons:arrow-left-on-rectangle",
